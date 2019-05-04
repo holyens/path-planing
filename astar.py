@@ -31,6 +31,8 @@ def astar(array, start, goal):
             while current in came_from:
                 data.append(current)
                 current = came_from[current]
+            data.append(start)
+            data.reverse()
             return data
 
         close_set.add(current)

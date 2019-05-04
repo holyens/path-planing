@@ -11,28 +11,44 @@ def image_Dilate(image):
     #对灰度图像进行二值化处理
     ret,binary=cv.threshold(gray,0,255,cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
     #将二值化图像显示
-    cv.imshow("binary",binary)
-    #设置形态学结构处理的核
-    kernel=cv.getStructuringElement(cv.MORPH_RECT,(5,5))
+    # cv.imshow("binary",binary)
+    #设置形态学结构处理的核 矩形：MORPH_RECT; 交叉形：MORPH_CORSS; 椭圆形： MORPH_ELLIPSE;
+    kernel=cv.getStructuringElement(cv.MORPH_ELLIPSE,(10,10))
     #对二值图像进行膨胀操作
     dst=cv.dilate(binary,kernel)
-    cv.imshow("dilate_demo",dst)
+    # cv.imshow("dilate_demo",dst)
     return dst
 
 img = cv.imread(r'E:\workspace\path-planing\res\roadmap.png')
-print(type(img))
-# cv.namedWindow("src",0)
-cv.imshow("src",img)
-dst = image_Dilate(img)
-np.savetxt('results/a.csv',dst, fmt='%d',delimiter=',')
-print(dst.shape)
-print(dst[60:63,60:63])
-path = astar.astar(dst, (50,0), (50,50))
-print(path)
-cv.waitKey(0)
-cv.destroyAllWindows() #使用Window name销毁指定窗口
-# cv2.imwrite('messigray.png',img)
+
+
+gray=cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+#对灰度图像进行二值化处理
+ret,org=cv.threshold(gray, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
+#设置形态学结构处理的核 矩形：MORPH_RECT; 交叉形：MORPH_CORSS; 椭圆形： MORPH_ELLIPSE;
+kernel=cv.getStructuringElement(cv.MORPH_ELLIPSE, (10,10))
+#对二值图像进行膨胀操作
+dst=cv.dilate(org, kernel)
+# np.savetxt('results/a.csv',dst, fmt='%d',delimiter=',')
+start = (50,0)
+goal = (50,999)
+path = astar.astar(dst, start, goal)
+path_x = [t[0] for t in path]
+path_y = [t[1] for t in path]
+plt.subplot(211), plt.imshow(org,'gray'),plt.title('ORIGIN')
+plt.subplot(212), plt.imshow(dst,'gray'),plt.plot(path_y,path_x,'r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
+plt.show()
+
+
+
 '''
+# print(type(img))
+# cv.namedWindow("src",0)
+# cv.imshow("src",img)
+# print(path)
+# cv.waitKey(0)
+# cv.destroyAllWindows() #使用Window name销毁指定窗口
+# cv2.imwrite('messigray.png',img)
 plt.imshow(img, cmap = 'gray', interpolation = 'bicubic')
 plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
 plt.show()
