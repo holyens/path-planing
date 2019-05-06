@@ -2,7 +2,7 @@
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
-import astar
+import algorithms as alg
 ##膨胀
 def image_Dilate(image):
     print(image.shape)
@@ -19,7 +19,7 @@ def image_Dilate(image):
     # cv.imshow("dilate_demo",dst)
     return dst
 
-img = cv.imread(r'E:\workspace\path-planing\res\roadmap.png')
+img = cv.imread('res/roadmap.png')
 
 
 gray=cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -32,11 +32,12 @@ dst=cv.dilate(org, kernel)
 # np.savetxt('results/a.csv',dst, fmt='%d',delimiter=',')
 start = (50,0)
 goal = (50,999)
-path = astar.astar(dst, start, goal)
+path = alg.astar(dst, start, goal)
 path_x = [t[0] for t in path]
 path_y = [t[1] for t in path]
-plt.subplot(211), plt.imshow(org,'gray'),plt.title('ORIGIN')
-plt.subplot(212), plt.imshow(dst,'gray'),plt.plot(path_y,path_x,'r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
+plt.subplot(311), plt.imshow(org,'gray'),plt.title('ORIGIN')
+plt.subplot(312), plt.imshow(dst,'gray'),plt.plot(path_y,path_x,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
+plt.subplot(313), plt.imshow(org,'gray'),plt.plot(path_y,path_x,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
 plt.show()
 
 
