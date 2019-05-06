@@ -33,13 +33,21 @@ dst=cv.dilate(org, kernel)
 start = (50,0)
 goal = (50,999)
 path = alg.astar(dst, start, goal)
-path_x = [t[0] for t in path]
-path_y = [t[1] for t in path]
+path_x = [t[1] for t in path]
+path_y = [t[0] for t in path]
 plt.subplot(311), plt.imshow(org,'gray'),plt.title('ORIGIN')
-plt.subplot(312), plt.imshow(dst,'gray'),plt.plot(path_y,path_x,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
-plt.subplot(313), plt.imshow(org,'gray'),plt.plot(path_y,path_x,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
+plt.subplot(312), plt.imshow(dst,'gray'),plt.plot(path_x,path_y,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
+plt.subplot(313), plt.imshow(org,'gray'),plt.plot(path_x,path_y,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
+ani = ani
 plt.show()
-
+def init():
+    line.set_xdata(path_x[0])
+    line.set_ydata(path_y[0])
+    return line
+def animate(i):
+    line.set_xdata(path_x[i])
+    line.set_ydata(path_y[i])
+    return line
 
 
 '''
