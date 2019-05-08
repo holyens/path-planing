@@ -4,6 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import animation
 import algorithms as alg
+plt.rcParams['animation.ffmpeg_path']='D:/DevSoft/ffmpeg-win64-static/bin/ffmpeg'
 ##膨胀
 def image_Dilate(image):
     print(image.shape)
@@ -36,11 +37,14 @@ goal = (50,999)
 path = alg.astar(dst, start, goal)
 path_x = [t[1] for t in path]
 path_y = [t[0] for t in path]
-fig = plt.figure()
-plt.subplot(311), plt.imshow(org,'gray'),plt.title('ORIGIN')
-plt.subplot(312), plt.imshow(dst,'gray'),plt.plot(path_x,path_y,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
-plt.subplot(313), plt.imshow(org,'gray'),plt.plot(path_x,path_y,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
-line, = plt.plot(path_x[0],path_y[0], '.g',markersize=10)
+fig1 = plt.figure()
+plt.subplot(211),plt.imshow(255-org,'gray'),plt.title('ORIGIN')
+plt.subplot(212),plt.imshow(255-dst,'gray') #,plt.plot(path_x,path_y,'--r'),plt.title('RESULT (%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
+fig3 = plt.figure()
+plt.imshow(255-org,'gray'),plt.plot(path_x,path_y,'--r'),plt.title('(%d,%d)->(%d,%d)'%(start[0],start[1],goal[0],goal[1]))
+fig3.set_size_inches(20, 2)
+# plt.plot([0,999],[50,50],'-.b')
+line, = plt.plot(path_x[0],path_y[0], '.g',markersize=12)
 def init():
     line.set_xdata(path_x[0])
     line.set_ydata(path_y[0])
@@ -49,12 +53,18 @@ def animate(i):
     line.set_xdata(path_x[i*2])
     line.set_ydata(path_y[i*2])
     return line
-ani = animation.FuncAnimation(fig=fig,
+# Set up formatting for the movie files
+
+ani = animation.FuncAnimation(fig=fig3,
                               func=animate,
                               frames=int(len(path_x)/2),
                               init_func=init,
                               interval=10,
                               blit=False)
+##writer = animation.writers['ffmpeg']
+##writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+mywriter = animation.FFMpegWriter()
+ani.save('MovWave.mp4', writer=mywriter)
 plt.show()
 
 
