@@ -18,6 +18,7 @@ def heuristic(a, b):
     return (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2
 
 def astar(array, start, goal):
+    lps=[]
     mask = numpy.zeros(array.shape,dtype=numpy.uint8)
     neighbors = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)]
 
@@ -41,9 +42,10 @@ def astar(array, start, goal):
                 current = came_from[current]
             data.append(start)
             data.reverse()
-            return (data,mask)
+            return (data,lps)
 
         close_set.add(current)
+        lps.append((current[0],current[1]))
         for i, j in neighbors:
             neighbor = (current[0] + i, current[1] + j)
             tentative_g_score = gscore[current] + heuristic(current, neighbor)
@@ -65,6 +67,7 @@ def astar(array, start, goal):
 #   goal : goalpoint  tuple,(goal_x,goal_y)
 # output: if path is exist, output the list of point(tuple), otherwise, output False
 def bfs(array, start, goal):
+    lps=[]
     mask = numpy.zeros(array.shape,dtype=numpy.uint8)
     neighbors = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)]
     came_from = {}    
@@ -82,8 +85,9 @@ def bfs(array, start, goal):
                 current = came_from[current]
             data.append(start)
             data.reverse()
-            return (data,mask)
+            return (data,lps)
         else:
+            lps.append((current[0],current[1]))
             for i,j in neighbors:
                 neighbor = (current[0]+i,current[1]+j)                
                 if 0<=neighbor[0]<array.shape[0] and 0<=neighbor[1]<array.shape[1]:

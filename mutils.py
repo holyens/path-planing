@@ -26,17 +26,20 @@ def save_video(filename, roadmap, path, start, goal, show_ani=False,alg=''):
         line.set_xdata(path_x[i*2])
         line.set_ydata(path_y[i*2])
         return line
-    # Set up formatting for the movie files
-    ani = animation.FuncAnimation(fig=fig,
-                                func=animate,
-                                frames=int(len(path_x)/2),
-                                init_func=init,
-                                interval=10,
-                                blit=False)
     
+
     if show_ani:
-        plt.show()
+        #plt.show()
+        plt.savefig(filename)
+        plt.close()
     else:
+        # Set up formatting for the movie files
+        ani = animation.FuncAnimation(fig=fig,
+                                    func=animate,
+                                    frames=int(len(path_x)/2),
+                                    init_func=init,
+                                    interval=10,
+                                    blit=False)
         mywriter = animation.FFMpegWriter()
         ani.save(filename, writer=mywriter)
 
